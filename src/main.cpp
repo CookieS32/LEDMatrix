@@ -1,20 +1,29 @@
 #include <Arduino.h>
+#include <SPI.h>
+#include <MD_MAX72xx.h>
+#include <MD_Parola.h>
 
-int ButtonInputs[] = {17,16,4,5}, ButtonStates[4];
+#define HARDWARE_TYPE MD_MAX72XX::FC16_HW
+#define MAX_DECIVES 1
+#define CS_PIN 5
 
+
+MD_Parola myDispaly = MD_Parola(HARDWARE_TYPE, CS_PIN, MAX_DECIVES);
 
 void setup() {
-  for(int i = 0; i<4; ++i)
-    pinMode(ButtonInputs[i], INPUT_PULLUP);
+  myDispaly.begin();
+  myDispaly.displayClear();
   Serial.begin(9600);
   
 }
 
 void loop() {
-  for(int i = 0; i < 4; ++i)
-    ButtonStates[i] = digitalRead(ButtonInputs[i]);
-  
-  for(int i = 0; i < 4; ++i)
-    Serial.printf("Button %d: %d\n", i, ButtonStates[i]);
-  delay(500);
+  myDispaly.print("S");
+  delay(1000);
+  myDispaly.print("V");
+  delay(1000);
+  myDispaly.print("E");
+  delay(1000);
+  myDispaly.print("N");
+  delay(1000);
 }
