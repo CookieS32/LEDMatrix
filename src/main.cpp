@@ -1,29 +1,44 @@
 #include <Arduino.h>
 #include <SPI.h>
-#include <MD_MAX72xx.h>
-#include <MD_Parola.h>
 
-#define HARDWARE_TYPE MD_MAX72XX::FC16_HW
-#define MAX_DECIVES 1
 #define CS_PIN 5
 
+// MAX7219 Registers
+#define DECODE_MODE 9
+#define INTENSITY 10
+#define SCAN_LIMIT 11
+#define SHUTDOWN 12
+#define DISPLAY_TEST 16
 
-MD_Parola myDispaly = MD_Parola(HARDWARE_TYPE, CS_PIN, MAX_DECIVES);
 
-void setup() {
-  myDispaly.begin();
-  myDispaly.displayClear();
-  Serial.begin(9600);
+
+void SendData(uint8_t address, uint8_t value);
+
+void setup(void) {
+  pinMode(CS_PIN, OUTPUT);
+  SPI.setBitOrder(MSBFIRST);
+  SPI.begin();
+
+  SendData(DISPLAY_TEST, 0x01);
+  delay(1000);
+  SendData(DISPLAY_TEST, 0x00);
+  SendData(DECODE_MODE, 0x00);
+  SendData(INTENSITY, 0x02);
+  SendData(SCAN_LIMIT, 0x0f);
+  SendData(SHUTDOWN, 0x01);
+}
+
+void loop(void) {
+  SendData(1, B00100000);
+  delay(10000);
+  SendData(3, B00000001);
+  delay(100000);
   
 }
 
-void loop() {
-  myDispaly.print("S");
-  delay(1000);
-  myDispaly.print("V");
-  delay(1000);
-  myDispaly.print("E");
-  delay(1000);
-  myDispaly.print("N");
-  delay(1000);
+void SendData(uint8_t address, uint8_t value) {
+  digitalWrite(CS_PIN, LOW);
+  SPI.transfer(address);
+  SPI.transfer(value);
+  digitalWrite(CS_PIN, HIGH);
 }
