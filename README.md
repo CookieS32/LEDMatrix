@@ -10,3 +10,5 @@ You are able to paint with 4 buttons on the LED matrix.
 - "yButton" on Pin 16 controls the y position
 - "changeButton" on pin 4 can paint or wipe the current pixel
 - "clearButton" on pin 2 clears the whole LED matrix
+
+Tested with ESP32 Dev-board
